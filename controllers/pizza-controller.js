@@ -4,6 +4,12 @@ const pizzaController = {
     // get all pizzas
     getAllPizza(req, res) {
       Pizza.find({})
+        .populate({
+          path: 'comments',
+          select: '-__v' //tell Mongoose not to return the "__v" field on populated comments
+        })
+        .select('-__v') //tell Mongoose not to return the pizza's "__v" field 
+        .sort({ _id: -1 }) //this gets the newest pizza because a timestamp value is hidden somewhere inside the Mongo DB ObjectId
         .then(dbPizzaData => res.json(dbPizzaData))
         .catch(err => {
           console.log(err);
@@ -14,8 +20,12 @@ const pizzaController = {
     // get one pizza by id
     getPizzaById({ params }, res) {
       Pizza.findOne({ _id: params.id })
+        .populate({
+          path: 'comments',
+          select: '-__v'
+        })
+        .select('-__v')
         .then(dbPizzaData => {
-          // If no pizza is found, send 404
           if (!dbPizzaData) {
             res.status(404).json({ message: 'No pizza found with this id!' });
             return;
