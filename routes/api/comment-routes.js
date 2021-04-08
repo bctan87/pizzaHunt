@@ -13,6 +13,8 @@ router.route('/:pizzaId').post(addComment);
 router
   .route('/:pizzaId/:commentId')
   .put(addReply)
-  .delete(removeComment)
+  .delete(removeComment);
+
+router.route('/:pizzaId/:commentId/:replyId').delete(removeReply);
 
 module.exports = router;
